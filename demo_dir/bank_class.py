@@ -22,7 +22,7 @@ class BankAccount:
             self.balance -= amount
             self.transactions.append(Transaction(amount, 'Withdraw'))
         else:
-            print("Insufficient funds")
+            raise ValueError("Insufficient funds")
 
     def is_overdrawn(self) -> bool:
         return self.balance < 0
