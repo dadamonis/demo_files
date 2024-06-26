@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 class Transaction:
     def __init__(self, amount: float, transaction_type: str):
@@ -11,7 +11,7 @@ class BankAccount:
     def __init__(self, account_number: str, initial_balance: float = 0.0):
         self.account_number = account_number
         self.balance = initial_balance
-        self.transactions = []
+        self.transactions: List[Transaction] = []
 
     def deposit(self, amount: float) -> None:
         self.balance += amount
@@ -22,7 +22,7 @@ class BankAccount:
             self.balance -= amount
             self.transactions.append(Transaction(amount, 'Withdraw'))
         else:
-            print("Insufficient funds")
+            raise ValueError("Insufficient funds")
 
     def is_overdrawn(self) -> bool:
         return self.balance < 0
