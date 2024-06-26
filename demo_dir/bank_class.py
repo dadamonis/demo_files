@@ -49,4 +49,3 @@ class Cust:
 
     def get_tot_bal(self):
         return sum(acc.b for acc in self.accts.values())
-
