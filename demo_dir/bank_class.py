@@ -1,52 +1,51 @@
 from datetime import datetime
-from typing import Dict, Optional
 
-class Transaction:
-    def __init__(self, amount: float, transaction_type: str):
-        self.amount = amount
-        self.transaction_type = transaction_type
-        self.date = datetime.now()
+class Tr:
+    def __init__(self, amt, t_type):
+        self.a = amt
+        self.t = t_type
+        self.d = datetime.now()
 
-class BankAccount:
-    def __init__(self, account_number: str, initial_balance: float = 0.0):
-        self.account_number = account_number
-        self.balance = initial_balance
-        self.transactions = []
+class BnkAcc:
+    def __init__(self, acc_num, init_bal=0):
+        self.acc_num = acc_num
+        self.b = init_bal
+        self.t = []
 
-    def deposit(self, amount: float) -> None:
-        self.balance += amount
-        self.transactions.append(Transaction(amount, 'Deposit'))
+    def dep(self, amt):
+        self.b += amt
+        self.t.append(Tr(amt, 'Dep'))
     
-    def withdraw(self, amount: float) -> None:
-        if amount <= self.balance:
-            self.balance -= amount
-            self.transactions.append(Transaction(amount, 'Withdraw'))
+    def wdraw(self, amt):
+        if amt <= self.b:
+            self.b -= amt
+            self.t.append(Tr(amt, 'Wdraw'))
         else:
-            print("Insufficient funds")
+            print("No money")
 
-    def is_overdrawn(self) -> bool:
-        return self.balance < 0
+    def od(self):
+        return self.b < 0
 
-class SavingsAccount(BankAccount):
-    def __init__(self, account_number: str, initial_balance: float = 0.0, interest_rate: float = 0.01):
-        super().__init__(account_number, initial_balance)
-        self.interest_rate = interest_rate
+class SAcc(BnkAcc):
+    def __init__(self, acc_num, init_bal=0, ir=0.01):
+        super().__init__(acc_num, init_bal)
+        self.ir = ir
 
-    def apply_interest(self) -> None:
-        interest_amount = self.balance * self.interest_rate
-        self.deposit(interest_amount)
+    def ai(self):
+        int_amt = self.b * self.ir
+        self.dep(int_amt)
 
-class Customer:
-    def __init__(self, name: str, customer_id: str):
-        self.name = name
-        self.customer_id = customer_id
-        self.accounts: Dict[str, BankAccount] = {}
+class Cust:
+    def __init__(self, nm, cid):
+        self.nm = nm
+        self.cid = cid
+        self.accts = {}
 
-    def add_account(self, account: BankAccount) -> None:
-        self.accounts[account.account_number] = account
+    def add_acc(self, acc):
+        self.accts[acc.acc_num] = acc
 
-    def get_account(self, account_number: str) -> Optional[BankAccount]:
-        return self.accounts.get(account_number)
+    def get_acc(self, acc_num):
+        return self.accts.get(acc_num)
 
-    def get_total_balance(self) -> float:
-        return sum(account.balance for account in self.accounts.values())
+    def get_tot_bal(self):
+        return sum(acc.b for acc in self.accts.values())
