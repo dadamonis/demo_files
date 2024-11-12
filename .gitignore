@@ -166,3 +166,4 @@ function_test_a.py
 # function_test_b.py
 
 *.html
+.vscode
