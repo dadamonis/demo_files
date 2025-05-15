@@ -1,3 +1,16 @@
+# TEST DATA
+uid_df = pd.DataFrame({
+    'UID': ['UID1', 'UID2', 'UID3', 'UID4', 'UID5'],
+    'Total_Annual': [100, 200, 150, 100, 50],
+    'SPE': [None, None, None, None, None]
+})
+
+spe_df = pd.DataFrame({
+    'SPE': ['SPE1', 'SPE2'],
+    'Total_Annual': [300, 250]
+}).sort_values(by=['SPE','Total_Annual'])
+
+#######################
 import polars as pl
 from itertools import combinations
 
