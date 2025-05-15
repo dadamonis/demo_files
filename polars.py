@@ -56,3 +56,37 @@ def assign_spe(uid_df: pl.DataFrame, spe_df: pl.DataFrame) -> pl.DataFrame:
         ).select(["uid", "total_annual", "assigned_spe"])
 
     return uid_df
+
+
+
+# NEW TEST CODE
+import pandas as pd
+
+projects = pd.DataFrame({
+    'project_id': [1, 2],
+    'budget': [1000, 500]
+})
+
+expenses = pd.DataFrame({
+    'expense_id': [101, 102, 103, 104],
+    'project_id': [1, 1, 2, 1],
+    'cost': [400, 700, 200, 300],
+    'date': ['2024-01-01', '2024-01-02', '2024-01-01', '2024-01-03']
+}).sort_values(by=['project_id', 'date'])
+
+projects.set_index('project_id', inplace=True)
+
+amortized_costs = []
+remaining_budget = projects['budget'].to_dict()
+
+for _, row in expenses.iterrows():
+    proj_id = row['project_id']
+    cost = row['cost']
+    available = remaining_budget[proj_id]
+
+    amortized = min(cost, available)
+    remaining_budget[proj_id] -= amortized
+
+    amortized_costs.append(amortized)
+
+expenses['amortized_cost'] = amortized_costs
