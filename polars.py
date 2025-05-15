@@ -103,3 +103,45 @@ for _, row in expenses.iterrows():
     amortized_costs.append(amortized)
 
 expenses['amortized_cost'] = amortized_costs
+
+##############
+import pandas as pd
+
+# Original dataframes
+uid_df = pd.DataFrame({
+    'UID': ['UID1', 'UID2', 'UID3', 'UID4', 'UID5'],
+    'Total_Annual': [100, 200, 150, 100, 50],
+    'SPE': [None, None, None, None, None]
+})
+
+spe_df = pd.DataFrame({
+    'SPE': ['SPE1', 'SPE2'],
+    'Total_Annual': [300, 250]
+}).sort_values(by=['SPE', 'Total_Annual'])
+
+# Amortization Logic
+uid_df_sorted = uid_df.sort_values(by='Total_Annual', ascending=False).reset_index(drop=True)
+spe_df_sorted = spe_df.reset_index(drop=True)
+
+for _, spe_row in spe_df_sorted.iterrows():
+    spe_name = spe_row['SPE']
+    target_total = spe_row['Total_Annual']
+
+    # Track UIDs assigned to current SPE
+    assigned_uids = []
+    current_total = 0
+
+    for idx, uid_row in uid_df_sorted.iterrows():
+        if pd.isna(uid_row['SPE']):
+            potential_total = current_total + uid_row['Total_Annual']
+            if potential_total <= target_total:
+                uid_df_sorted.at[idx, 'SPE'] = spe_name
+                current_total = potential_total
+                assigned_uids.append(uid_row['UID'])
+            
+            # Stop if we've reached the target
+            if current_total == target_total:
+                break
+
+# Final Result
+print(uid_df_sorted)
